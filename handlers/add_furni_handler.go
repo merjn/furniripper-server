@@ -52,7 +52,7 @@ func (a AddFurniHandler) Handle(w http.ResponseWriter, req *http.Request) {
 	furniLength := req.Form.Get("furni_length")
 	if furniLength == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		w.WriteHeader(ErrLengthNotFound)
+		w.Write(ErrLengthNotFound)
 		return
 	}
 }
