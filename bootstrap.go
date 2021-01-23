@@ -18,8 +18,11 @@ func configureWebserver() {
 }
 
 func configureAddFurniHandler() {
-	addFurniHandler := handlers.AddFurniHandler
-	jwtTokenMiddleware := middleware.AuthorizeJwtToken(addFurniHandler)
+	addFurniHandler := handlers.AddFurniHandler{
+		Adder: nil,
+	}
+
+	jwtTokenMiddleware := middleware.AuthorizeJwtToken(addFurniHandler.Handle)
 	mux.HandleFunc("/add_furni", jwtTokenMiddleware)
 
 	log.Println("Add furni handler configured")

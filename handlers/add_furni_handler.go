@@ -1,7 +1,15 @@
 package handlers
 
-import "net/http"
+import (
+	"github.com/merjn/furniripper-server/furni"
+	"net/http"
+)
 
-func AddFurniHandler(w http.ResponseWriter, req *http.Request) {
+type AddFurniHandler struct {
+	Adder furni.Adder
+}
+
+func (a AddFurniHandler) Handle(w http.ResponseWriter, req *http.Request) {
 
 }
+
