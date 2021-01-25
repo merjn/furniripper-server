@@ -13,7 +13,7 @@ var ErrWidthNotFound = []byte("width not found")
 var ErrLengthNotFound = []byte("length not found")
 
 type AddFurniHandler struct {
-	furniService *service.Furni
+	FurniService *service.Furni
 }
 
 // Handle gets all data from the request and passes it to the furni service facade.
@@ -58,10 +58,10 @@ func (a AddFurniHandler) Handle(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err := a.furniService.AddFurni(swfLocation, swfIcon, furniWidth, furniLength, furniHeight)
+	err := a.FurniService.AddFurni(swfLocation, swfIcon, furniWidth, furniLength, furniHeight)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error))
+		w.Write([]byte(err.Error()))
 		return
 	}
 }

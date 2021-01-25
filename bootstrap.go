@@ -1,10 +1,12 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/merjn/furniripper-server/handlers"
 	"github.com/merjn/furniripper-server/middleware"
-	"log"
-	"net/http"
+	"github.com/merjn/furniripper-server/service"
+	"github.com/rs/zerolog/log"
 )
 
 var mux *http.ServeMux
@@ -14,16 +16,16 @@ func configureWebserver() {
 
 	configureAddFurniHandler()
 
-	log.Println("Webserver mux configured")
+	log.Info().Msg("Webserver mux configured")
 }
 
 func configureAddFurniHandler() {
 	addFurniHandler := handlers.AddFurniHandler{
-		Adder: nil,
+		FurniService: new(service.Furni),
 	}
 
 	jwtTokenMiddleware := middleware.AuthorizeJwtToken(addFurniHandler.Handle)
 	mux.HandleFunc("/add_furni", jwtTokenMiddleware)
 
-	log.Println("Add furni handler configured")
+	log.Info().Msg("Add furni handler configured")
 }
