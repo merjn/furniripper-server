@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"github.com/merjn/furniripper-server/furni"
 	"net/http"
+
+	"github.com/merjn/furniripper-server/service"
 )
 
 var ErrSwfLocationNotFound = []byte("swf_location not found")
@@ -12,9 +13,10 @@ var ErrWidthNotFound = []byte("width not found")
 var ErrLengthNotFound = []byte("length not found")
 
 type AddFurniHandler struct {
-	Adder furni.Adder
+	furniService *service.Furni
 }
 
+// Handle gets all data from the request and passes it to the furni service facade.
 func (a AddFurniHandler) Handle(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -55,5 +57,11 @@ func (a AddFurniHandler) Handle(w http.ResponseWriter, req *http.Request) {
 		w.Write(ErrLengthNotFound)
 		return
 	}
-}
 
+	err := a.furniService.AddFurni(swfLocation, swfIcon, furniWidth, furniLength, furniHeight)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error))
+		return
+	}
+}
