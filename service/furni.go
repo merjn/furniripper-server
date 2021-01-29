@@ -7,10 +7,12 @@ import (
 	"os"
 
 	"github.com/merjn/furniripper-server/config"
+	"github.com/merjn/furniripper-server/furni"
 )
 
 type Furni struct {
 	Config config.Config
+	Adder furni.Adder
 }
 
 // AddFurni adds the furniture to the hotel.

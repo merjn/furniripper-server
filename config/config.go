@@ -1,6 +1,7 @@
 package config
 
 type Config struct {
+	Secret        string
 	FurniLocation string
 	IconLocation  string
 

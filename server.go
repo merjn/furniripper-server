@@ -9,6 +9,7 @@ func init() {
 	log.Info().Msg("Developed by https://github.com/merjn")
 
 	setConfig()
+	configureJwtToken()
 	configureWebserver()
 }
 

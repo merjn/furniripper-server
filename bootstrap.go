@@ -2,10 +2,12 @@ package main
 
 import (
 	"net/http"
+	"os"
 
+	jwtmiddleware "github.com/auth0/go-jwt-middleware"
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/merjn/furniripper-server/config"
 	"github.com/merjn/furniripper-server/handlers"
-	"github.com/merjn/furniripper-server/middleware"
 	"github.com/merjn/furniripper-server/service"
 	"github.com/rs/zerolog/log"
 	"github.com/tkanos/gonfig"
@@ -13,6 +15,7 @@ import (
 
 var mux *http.ServeMux
 var c config.Config
+var authMiddleware *jwtmiddleware.JWTMiddleware
 
 func configureWebserver() {
 	mux = http.NewServeMux()
@@ -20,6 +23,30 @@ func configureWebserver() {
 	configureAddFurniHandler()
 
 	log.Info().Msg("Webserver mux configured")
+}
+
+func configureJwtToken() {
+	secretKey := os.Getenv("JWT_SECRET")
+	if secretKey == "" {
+		log.Fatal().Msg("JWT_SECRET not found in environment")
+	}
+	authMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
+		ValidationKeyGetter: func(token *jwt.Token) (i interface{}, e error) {
+			return []byte(secretKey), nil
+		},
+		SigningMethod: jwt.SigningMethodHS256,
+	})
+
+	/*r := jwt.NewWithClaims(authMiddleware.Options.SigningMethod, jwt.MapClaims{
+		"domain": "*",
+	})
+
+	tokenStr, err := r.SignedString([]byte(secretKey))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(tokenStr)*/
 }
 
 func setConfig() {
@@ -41,8 +68,7 @@ func configureAddFurniHandler() {
 		FurniService: FurniService,
 	}
 
-	jwtTokenMiddleware := middleware.AuthorizeJwtToken(addFurniHandler.Handle)
-	mux.HandleFunc("/add_furni", jwtTokenMiddleware)
+	mux.Handle("/add_furni", authMiddleware.Handler(http.HandlerFunc(addFurniHandler.Handle)))
 
 	log.Info().Msg("Add furni handler configured")
 }
