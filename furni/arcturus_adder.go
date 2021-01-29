@@ -56,8 +56,7 @@ func (a *ArcturusAdder) Add(furni Furni) error {
 		return fmt.Errorf("%d rows affected instead of 1 while inserting into catalog_items", rowsAffected)
 	}
 
-	className := fmt.Sprintf("%s.swf", furni.Name)
-	xmlData := fmt.Sprintf(`<furnitype id="%d" classname="%s"><revision>1337</revision><defaultdir>0</defaultdir><xdim>1</xdim><ydim>1</ydim><partcolors /><name>%s</name><description>Added by Habbo.ovh furniripper</description><adurl /><offerid>-1</offerid><buyout>0</buyout><rentofferid>-1</rentofferid><rentbuyout>0</rentbuyout><bc>0</bc><excludeddynamic>0</excludeddynamic><customparams /><specialtype>1</specialtype><canstandon>0</canstandon><cansiton>0</cansiton><canlayon>0</canlayon></furnitype>`, itemId, className, furni.Name)
+	xmlData := fmt.Sprintf(`<furnitype id="%d" classname="%s"><revision>1337</revision><defaultdir>0</defaultdir><xdim>1</xdim><ydim>1</ydim><partcolors /><name>%s</name><description>Added by Habbo.ovh furni ripper</description><adurl /><offerid>-1</offerid><buyout>0</buyout><rentofferid>-1</rentofferid><rentbuyout>0</rentbuyout><bc>0</bc><excludeddynamic>0</excludeddynamic><customparams /><specialtype>1</specialtype><canstandon>0</canstandon><cansiton>0</cansiton><canlayon>0</canlayon></furnitype>`, spriteId, furni.Name, furni.Name)
 
 	res, err = a.DB.Exec("INSERT INTO furnidata (data, type) VALUES (?, ?)", xmlData, "room")
 	if err != nil {
