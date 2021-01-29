@@ -8,7 +8,8 @@ import (
 )
 
 var ErrSwfNameNotFound = []byte("swf name not found")
-var ErrIconLocationNotFound = []byte("icon_location not found")
+var ErrIconNameNotFound = []byte("icon name not found")
+var ErrIconContentNotFound = []byte("icon content not found")
 var ErrHeightNotFound = []byte("height not found")
 var ErrWidthNotFound = []byte("width not found")
 var ErrLengthNotFound = []byte("length not found")
@@ -44,10 +45,17 @@ func (a AddFurniHandler) Handle(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	swfIcon := req.FormValue("icon_location")
-	if swfIcon == "" {
+	iconName := req.FormValue("icon_name")
+	if iconName == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write(ErrIconLocationNotFound)
+		w.Write(ErrIconNameNotFound)
+		return
+	}
+
+	iconContent := req.FormValue("icon_content")
+	if iconContent == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(ErrIconContentNotFound)
 		return
 	}
 
@@ -65,14 +73,14 @@ func (a AddFurniHandler) Handle(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	furniLength := req.Form.Get("furni_length")
+	furniLength := req.FormValue("furni_length")
 	if furniLength == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(ErrLengthNotFound)
 		return
 	}
 
-	err := a.FurniService.AddFurni(swfName, swfContent, swfIcon, furniWidth, furniLength, furniHeight)
+	err := a.FurniService.AddFurni(swfName, swfContent, iconName, iconContent, furniWidth, furniLength, furniHeight)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

@@ -8,6 +8,7 @@ func init() {
 	log.Info().Msg("Habbo.ovh furniripper server")
 	log.Info().Msg("Developed by https://github.com/merjn")
 
+	setConfig()
 	configureWebserver()
 }
 

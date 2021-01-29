@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/rs/zerolog/log"
@@ -8,9 +9,10 @@ import (
 
 // Run starts the application.
 func Run() error {
-	log.Info().Msg("Habbo furniripper server started on port 3000")
+	log.Info().Msgf("Habbo furniripper server started on port %d", config.WebserverPort)
 
-	if err := http.ListenAndServe(":3000", mux); err != nil {
+	listenTo := fmt.Sprintf(":%d", config.WebserverPort)
+	if err := http.ListenAndServe(listenTo, mux); err != nil {
 		return err
 	}
 
