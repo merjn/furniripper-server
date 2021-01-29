@@ -11,7 +11,7 @@ import (
 )
 
 var mux *http.ServeMux
-var config Config
+var config config.Config
 
 func configureWebserver() {
 	mux = http.NewServeMux()

@@ -1,4 +1,6 @@
 {
+    "FurniLocation": "C:\\xampp\\htdocs",
+
     "DbName": "habbo",
     "DbUser": "root",
     "DbPass": "123456",
