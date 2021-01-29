@@ -1,14 +1,10 @@
 package config
 
 type Config struct {
-	Secret        string
+	ConnectionString string
+
 	FurniLocation string
 	IconLocation  string
-
-	DbName string
-	DbUser string
-	DbPass string
-	DbPort int
 
 	WebserverPort int
 }

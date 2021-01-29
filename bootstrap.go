@@ -1,12 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 	"os"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/merjn/furniripper-server/config"
+	"github.com/merjn/furniripper-server/furni"
 	"github.com/merjn/furniripper-server/handlers"
 	"github.com/merjn/furniripper-server/service"
 	"github.com/rs/zerolog/log"
@@ -16,6 +18,20 @@ import (
 var mux *http.ServeMux
 var c config.Config
 var authMiddleware *jwtmiddleware.JWTMiddleware
+var db *sql.DB
+
+func createDatabase() {
+	d, err := sql.Open("mysql", c.ConnectionString)
+	if err != nil {
+		log.Fatal().Msgf("unable to open mysql connection: %s", err.Error())
+	}
+
+	if err := d.Ping(); err != nil {
+		log.Fatal().Msgf("unable to ping database: %s", err.Error())
+	}
+
+	db = d
+}
 
 func configureWebserver() {
 	mux = http.NewServeMux()
@@ -60,8 +76,13 @@ func setConfig() {
 }
 
 func configureAddFurniHandler() {
+	Arcturus := &furni.ArcturusAdder{
+		DB: db,
+	}
+
 	FurniService := &service.Furni{
 		Config: c,
+		Adder:  Arcturus,
 	}
 
 	addFurniHandler := handlers.AddFurniHandler{

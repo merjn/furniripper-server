@@ -1,13 +1,8 @@
 {
-    "Secret": "YP6G5nbtJgR7NCPRQEs9WtDXCyNVF5ss",
-    
+    "ConnectionString": "root:123456@tcp(127.0.0.1:3306)/arcturus",
+
     "FurniLocation": "C:\\swfs",
     "IconLocation": "C:\\swfs",
-
-    "DbName": "habbo",
-    "DbUser": "root",
-    "DbPass": "123456",
-    "DbPort": 3306,
-
+    
     "WebserverPort": 3000
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/rs/zerolog/log"
 )
 
@@ -9,6 +10,7 @@ func init() {
 	log.Info().Msg("Developed by https://github.com/merjn")
 
 	setConfig()
+	createDatabase()
 	configureJwtToken()
 	configureWebserver()
 }

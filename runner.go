@@ -9,6 +9,7 @@ import (
 
 // Run starts the application.
 func Run() error {
+	defer db.Close()
 	log.Info().Msgf("Habbo furniripper server started on port %d", c.WebserverPort)
 
 	listenTo := fmt.Sprintf(":%d", c.WebserverPort)
