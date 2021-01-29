@@ -9,9 +9,9 @@ import (
 
 // Run starts the application.
 func Run() error {
-	log.Info().Msgf("Habbo furniripper server started on port %d", config.WebserverPort)
+	log.Info().Msgf("Habbo furniripper server started on port %d", c.WebserverPort)
 
-	listenTo := fmt.Sprintf(":%d", config.WebserverPort)
+	listenTo := fmt.Sprintf(":%d", c.WebserverPort)
 	if err := http.ListenAndServe(listenTo, mux); err != nil {
 		return err
 	}

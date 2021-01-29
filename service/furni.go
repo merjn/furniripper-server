@@ -1,11 +1,16 @@
 package service
 
 import (
-	"fmt"
 	"encoding/base64"
+	"fmt"
+	"io/ioutil"
+	"os"
+
+	"github.com/merjn/furniripper-server/config"
 )
 
 type Furni struct {
+	Config config.Config
 }
 
 // AddFurni adds the furniture to the hotel.
@@ -19,13 +24,18 @@ func (f *Furni) AddFurni(swfName, swfContent, iconName, iconContent, x, y, z str
 	if err != nil {
 		return err
 	}
+	
+	furniFile := fmt.Sprintf("%s\\%s", f.Config.FurniLocation, swfName)
+	err = ioutil.WriteFile(furniFile, swfContentDecoded, os.ModePerm)
+	if err != nil {
+		return err
+	}
 
-	fmt.Println(swfContentDecoded)
-	fmt.Println(iconContentDecoded)
-
-	// Move swf content to furnidata
-
-	// Move icon content to icon data	
+	iconFile := fmt.Sprintf("%s\\%s", f.Config.IconLocation, iconName)
+	err = ioutil.WriteFile(iconFile, iconContentDecoded, os.ModePerm)
+	if err != nil {
+		return err
+	}
 
 	// Add to catalogue & furnidata
 	

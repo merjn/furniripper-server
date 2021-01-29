@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/merjn/furniripper-server/config"
 	"github.com/merjn/furniripper-server/handlers"
 	"github.com/merjn/furniripper-server/middleware"
 	"github.com/merjn/furniripper-server/service"
@@ -11,7 +12,7 @@ import (
 )
 
 var mux *http.ServeMux
-var config config.Config
+var c config.Config
 
 func configureWebserver() {
 	mux = http.NewServeMux()
@@ -22,18 +23,22 @@ func configureWebserver() {
 }
 
 func setConfig() {
-	var conf Config
+	var conf config.Config
 	err := gonfig.GetConf("config.json", &conf)
 	if err != nil {
 		log.Fatal().Msg(err.Error())
 	}
 
-	config = conf
+	c = conf
 }
 
 func configureAddFurniHandler() {
+	FurniService := &service.Furni{
+		Config: c,
+	}
+
 	addFurniHandler := handlers.AddFurniHandler{
-		FurniService: new(service.Furni),
+		FurniService: FurniService,
 	}
 
 	jwtTokenMiddleware := middleware.AuthorizeJwtToken(addFurniHandler.Handle)

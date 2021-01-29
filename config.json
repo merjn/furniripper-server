@@ -1,5 +1,6 @@
 {
-    "FurniLocation": "C:\\xampp\\htdocs",
+    "FurniLocation": "C:\\swfs",
+    "IconLocation": "C:\\swfs",
 
     "DbName": "habbo",
     "DbUser": "root",
