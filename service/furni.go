@@ -60,12 +60,12 @@ func (f *Furni) AddFurni(swfName, swfContent, iconName, iconContent, x, y, z str
 		}
 	}
 
-	width, err := strconv.Atoi(x)
+	width, err := strconv.ParseFloat(x, 32)
 	if err != nil {
 		return err
 	}
 
-	length, err := strconv.Atoi(y)
+	length, err := strconv.ParseFloat(y, 32)
 	if err != nil {
 		return err
 	}
