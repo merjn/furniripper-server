@@ -1,5 +1,6 @@
 {
     "ConnectionString": "root:123456@tcp(127.0.0.1:3306)/arcturus",
+    "AcceptDuplicates": true,
 
     "FurniLocation": "C:\\swfs",
     "IconLocation": "C:\\swfs",

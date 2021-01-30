@@ -30,15 +30,34 @@ func (f *Furni) AddFurni(swfName, swfContent, iconName, iconContent, x, y, z str
 	}
 
 	furniFile := fmt.Sprintf("%s\\%s", f.Config.FurniLocation, swfName)
-	err = ioutil.WriteFile(furniFile, swfContentDecoded, os.ModePerm)
-	if err != nil {
-		return err
+	iconFile := fmt.Sprintf("%s\\%s", f.Config.IconLocation, iconName)
+
+	writeIcon, writeFurni := true, true
+	if f.Config.AcceptDuplicates {
+		_, err = os.Stat(furniFile)
+		if os.IsExist(err) {
+			writeFurni = false
+		}
+
+		_, err = os.Stat(iconFile)
+		if os.IsExist(err) {
+			writeIcon = false
+		}
+
 	}
 
-	iconFile := fmt.Sprintf("%s\\%s", f.Config.IconLocation, iconName)
-	err = ioutil.WriteFile(iconFile, iconContentDecoded, os.ModePerm)
-	if err != nil {
-		return err
+	if writeFurni {
+		err := ioutil.WriteFile(furniFile, swfContentDecoded, os.ModePerm)
+		if err != nil {
+			return err
+		}
+	}
+
+	if writeIcon {
+		err := ioutil.WriteFile(iconFile, iconContentDecoded, os.ModePerm)
+		if err != nil {
+			return err
+		}
 	}
 
 	width, err := strconv.Atoi(x)

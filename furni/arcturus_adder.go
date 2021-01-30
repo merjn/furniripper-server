@@ -21,33 +21,40 @@ func (a *ArcturusAdder) Add(furni Furni) error {
 
 	spriteId := time.Now().Unix()
 
-	// add to items_base
-	query := "INSERT INTO items_base (sprite_id, public_name, item_name, stack_height, width, length) VALUES (?, ?, ?, ?, ?, ?)"
-	res, err := a.DB.Exec(query, spriteId, furni.Name, furni.Name, furni.Height, furni.Width, furni.Length)
+	// Check if there's an item with furni.Name. If so, use that one to fill our new category.
+	var itemId int64
+	err = a.DB.QueryRow("select id from items_base where item_name = ?", furni.Name).Scan(&itemId)
+	if err != nil || itemId <= 0 {
+		// add to items_base
+		query := "INSERT INTO items_base (sprite_id, public_name, item_name, stack_height, width, length) VALUES (?, ?, ?, ?, ?, ?)"
+		res, err := a.DB.Exec(query, spriteId, furni.Name, furni.Name, furni.Height, furni.Width, furni.Length)
+		if err != nil {
+			return err
+		}
+
+		rowsAffected, err := res.RowsAffected()
+		if err != nil {
+			return err
+		}
+
+		id, err := res.LastInsertId()
+		if err != nil {
+			return err
+		}
+
+		if rowsAffected != 1 {
+			return fmt.Errorf("%d rows affected instead of 1 while inserting into items_base", rowsAffected)
+		}
+
+		itemId = id
+	}
+
+	res, err := a.DB.Exec("INSERT INTO catalog_items (item_ids, page_id, catalog_name) VALUES (?, ?, ?)", itemId, catalogPage, furni.Name)
 	if err != nil {
 		return err
 	}
 
 	rowsAffected, err := res.RowsAffected()
-	if err != nil {
-		return err
-	}
-
-	itemId, err := res.LastInsertId()
-	if err != nil {
-		return err
-	}
-
-	if rowsAffected != 1 {
-		return fmt.Errorf("%d rows affected instead of 1 while inserting into items_base", rowsAffected)
-	}
-
-	res, err = a.DB.Exec("INSERT INTO catalog_items (item_ids, page_id, catalog_name) VALUES (?, ?, ?)", itemId, catalogPage, furni.Name)
-	if err != nil {
-		return err
-	}
-
-	rowsAffected, err = res.RowsAffected()
 	if err != nil {
 		return err
 	}
